@@ -83,7 +83,7 @@ int main() {
 
         demanderChoixMenu();
 
-        switch(choixMenu) {
+        switch (choixMenu) {
             case 1:
 
                 break;

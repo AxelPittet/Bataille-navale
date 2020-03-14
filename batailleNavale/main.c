@@ -5,8 +5,8 @@
 
 #pragma set_character_execution
 
-#define NOMBRE_COLONNES 10
-#define NOMBRE_LIGNES 10
+#define NOMBRE_COLONNES 9
+#define NOMBRE_LIGNES 9
 
 char carte[NOMBRE_COLONNES][NOMBRE_LIGNES], cibleLigne, b;
 int choixMenu, cibleColonne;
@@ -59,22 +59,22 @@ void regles() {
     clear();
 
     printf("                        Règles\n\n");
-    printf(" Chaque joueur possède:      Un bateau de 5 cases\n");
+    printf("  Sur la carte il y a :      Un bateau de 5 cases\n");
     printf("                             Un bateau de 4 cases\n");
     printf("                             Deux bateaux de 4 cases\n");
     printf("                             Un bateau de 2 cases\n\n");
 
-    printf(" Chacun son tour chaque joueur tire un obus sur une\n case de la carte adverse.\n");
-    printf(" Un bateau est touché quand un obus aterrit sur une\n des cases du bateau.\n");
-    printf(" Un bateau est coulé quand toutes ses cases sont touchées.\n");
-    printf(" Une partie se termine quand un joueur coule tout les\n bateaux adverses\n\n");
+    printf("  Le joueur doit tirer des obus sur des cases de la carte\n  pour essayer de toucher un bateau\n");
+    printf("  Un bateau est touché quand un obus aterrit sur une\n  des cases du bateau.\n");
+    printf("  Un bateau est coulé quand toutes ses cases sont touchées.\n");
+    printf("  Une partie se termine quand un joueur coule tout les\n  bateaux adverses\n\n");
 
     printf("                  ");
 
     pause();
 }
 
-void remplirTableau() {
+void remplirCarte() {
     for (int i = 0; i < 10; i++) {
         for (int a = 0; a < 10; a++) {
             carte[i][a] = ' ';
@@ -83,12 +83,12 @@ void remplirTableau() {
 }
 
 void afficherCarte() {
-    printf("   1  2  3  4  5  6  7  8  9  10\n");
+    printf("    1  2  3  4  5  6  7  8  9  10\n");
 
     for (int i = 0, b = 'A'; i < 10, b < 'K'; i++, b++) {
-        printf("%c ", b);
+        printf(" %c ", b);
         for (int a = 0; a < 10; a++) {
-            printf("[%c]", carte[i][a]);
+            printf("[%c]", carte[a][i]);
         }
         printf("\n");
     }
@@ -104,21 +104,54 @@ void tirer() {
     printf("Colonne de la cible : ");
     fflush(stdin);
     scanf("%d", &cibleColonne);
+
     printf("Ligne de la cible : ");
     fflush(stdin);
     scanf("%c", &cibleLigne);
 }
 
+void convertirLigne() {
+    if ((cibleLigne >= 'a') && (cibleLigne <= 'j')) {
+        cibleLigne -= 97;
+    } else if ((cibleLigne >= 'A') && (cibleLigne <= 'J')) {
+        cibleLigne -= 65;
+    }
+}
+
+void changerValeurCarte() {
+    if ((cibleColonne = 4) && (cibleLigne = 1)) {
+        carte[cibleColonne - 1][cibleLigne] = 'X';
+        printf("Touché !\n\n");
+    }
+}
+
+void verfierTir() {
+    if ((cibleColonne < 1) || (cibleColonne > 10) || (cibleLigne < 0) || (cibleLigne > 9)) {
+        printf("Tir non valide\n\n");
+    } else {
+        changerValeurCarte();
+    }
+}
+
 void jouer() {
-    clear();
+    remplirCarte();
 
-    indicationsJeu();
+    do {
+        clear();
 
-    remplirTableau();
+        indicationsJeu();
 
-    afficherCarte();
+        afficherCarte();
 
-    pause();
+        tirer();
+
+        convertirLigne();
+
+        verfierTir();
+
+        pause();
+    } while (cibleColonne != 20000000);
+
 }
 
 int main() {

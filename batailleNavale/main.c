@@ -5,7 +5,12 @@
 
 #pragma set_character_execution
 
-int choixMenu;
+#define NOMBRE_COLONNES 10
+#define NOMBRE_LIGNES 10
+
+char carte[NOMBRE_COLONNES][NOMBRE_LIGNES], cibleLigne, b;
+int choixMenu, cibleColonne;
+
 
 void clear() {
     system("cls");
@@ -69,6 +74,53 @@ void regles() {
     pause();
 }
 
+void remplirTableau() {
+    for (int i = 0; i < 10; i++) {
+        for (int a = 0; a < 10; a++) {
+            carte[i][a] = ' ';
+        }
+    }
+}
+
+void afficherCarte() {
+    printf("   1  2  3  4  5  6  7  8  9  10\n");
+
+    for (int i = 0, b = 'A'; i < 10, b < 'K'; i++, b++) {
+        printf("%c ", b);
+        for (int a = 0; a < 10; a++) {
+            printf("[%c]", carte[i][a]);
+        }
+        printf("\n");
+    }
+}
+
+void indicationsJeu() {
+    printf("  O = tir dans l'eau\n");
+    printf("  X = tir touché\n");
+    printf("  C = bateau coulé\n\n\n");
+}
+
+void tirer() {
+    printf("Colonne de la cible : ");
+    fflush(stdin);
+    scanf("%d", &cibleColonne);
+    printf("Ligne de la cible : ");
+    fflush(stdin);
+    scanf("%c", &cibleLigne);
+}
+
+void jouer() {
+    clear();
+
+    indicationsJeu();
+
+    remplirTableau();
+
+    afficherCarte();
+
+    pause();
+}
+
 int main() {
 
     SetConsoleOutputCP(65001);
@@ -83,9 +135,9 @@ int main() {
 
         demanderChoixMenu();
 
-        switch(choixMenu) {
+        switch (choixMenu) {
             case 1:
-
+                jouer();
                 break;
             case 2:
                 regles();

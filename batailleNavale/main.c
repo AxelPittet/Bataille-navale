@@ -36,7 +36,7 @@
 #define LIGNE2_BATEAU2 4
 
 char carte[NOMBRE_COLONNES][NOMBRE_LIGNES], cibleLigne, b;
-int choixMenu, cibleColonne;
+int choixMenu, cibleColonne, bateau5, bateau4, bateau3A, bateau3B, bateau2, win;
 
 void clear() {
     system("cls");
@@ -172,6 +172,8 @@ void changerValeurCarte() {
 
             printf("   Coulé\n\n");
 
+            bateau5 = 1;
+
         } else if ((carte[COLONNE1_BATEAU4][LIGNE_BATEAU4] == 'X') && (carte[COLONNE2_BATEAU4][LIGNE_BATEAU4] == 'X')
                    && (carte[COLONNE3_BATEAU4][LIGNE_BATEAU4] == 'X') &&
                    (carte[COLONNE4_BATEAU4][LIGNE_BATEAU4] == 'X')) {
@@ -181,6 +183,8 @@ void changerValeurCarte() {
             }
 
             printf("   Coulé\n\n");
+
+            bateau4 = 1;
 
         } else if ((carte[COLONNE1_BATEAU3A][LIGNE_BATEAU3A] == 'X') &&
                    (carte[COLONNE2_BATEAU3A][LIGNE_BATEAU3A] == 'X')
@@ -192,6 +196,8 @@ void changerValeurCarte() {
 
             printf("   Coulé\n\n");
 
+            bateau3A = 1;
+
         } else if ((carte[COLONNE1_BATEAU3B][LIGNE_BATEAU3B] == 'X') &&
                    (carte[COLONNE2_BATEAU3B][LIGNE_BATEAU3B] == 'X') &&
                    (carte[COLONNE3_BATEAU3B][LIGNE_BATEAU3B] == 'X')) {
@@ -202,6 +208,8 @@ void changerValeurCarte() {
 
             printf("   Coulé\n\n");
 
+            bateau3B = 1;
+
         } else if ((carte[COLONNE_BATEAU2][LIGNE1_BATEAU2] == 'X') && (carte[COLONNE_BATEAU2][LIGNE2_BATEAU2] == 'X')) {
 
             for (int i = 3; i < 5; i++) {
@@ -210,21 +218,31 @@ void changerValeurCarte() {
 
             printf("   Coulé !\n\n");
 
-        } else {
+            bateau2 = 1;
 
+        } else {
             printf("   Touché !\n\n");
         }
 
     } else {
+        carte[cibleColonne][cibleLigne] = '-';
+
         printf("   Dans l'eau !\n\n");
     }
+    printf("   ");
 }
 
 void verfierTir() {
-    if ((cibleColonne < 1) || (cibleColonne > 10) || (cibleLigne < 0) || (cibleLigne > 9)) {
+    if ((cibleColonne < 0) || (cibleColonne > 9) || (cibleLigne < 0) || (cibleLigne > 9)) {
         printf("   Tir non valide\n\n");
     } else {
         changerValeurCarte();
+    }
+}
+
+void conditionsVictoire() {
+    if ((bateau5 == 1) && (bateau4 == 1) && (bateau3A == 1) && (bateau3B == 1) && (bateau2 == 1)) {
+        win = 1;
     }
 }
 
@@ -244,9 +262,26 @@ void jouer() {
 
         verfierTir();
 
-        pause();
-    } while (cibleColonne != 20000000);
+        conditionsVictoire();
 
+        pause();
+    } while (win != 1);
+    clear();
+
+    printf(".______   .______           ___      ____    ____   ______      .___________. __    __          ___"
+           "           _______      ___        _______ .__   __.  _______     __   __   __  \n"
+           "|   _  \\  |   _  \\         /   \\     \\   \\  /   /  /  __  \\     |           ||  |  |  |        /   \\"
+           "         /  _____|    /   \\      /  _____||  \\ |  | |   ____|   |  | |  | |  | \n"
+           "|  |_)  | |  |_)  |       /  ^  \\     \\   \\/   /  |  |  |  |    `---|  |----`|  |  |  |       /  ^  \\"
+           "       |  |  __     /  ^  \\    |  |  __  |   \\|  | |  |__      |  | |  | |  | \n"
+           "|   _  <  |      /       /  /_\\  \\     \\      /   |  |  |  |        |  |     |  |  |  |      /  /_\\"
+           "  \\      |  | |_ |   /  /_\\  \\   |  | |_ | |  . `  | |   __|     |  | |  | |  | \n"
+           "|  |_)  | |  |\\  \\----. /  _____  \\     \\    /    |  `--'  |        |  |     |  `--'  |     /  _____"
+           "  \\     |  |__| |  /  _____  \\  |  |__| | |  |\\   | |  |____    |__| |__| |__| \n"
+           "|______/  | _| `._____|/__/     \\__\\     \\__/      \\______/         |__|      \\______/     /__/"
+           "     \\__\\     \\______| /__/     \\__\\  \\______| |__| \\__| |_______|   (__) (__) (__) \n\n\n\n\n\n\n");
+
+    pause();
 }
 
 int main() {

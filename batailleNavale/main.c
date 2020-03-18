@@ -12,6 +12,12 @@
 #pragma set_character_execution
 
 /**
+ * \project: Bataille navale
+ * \author: Axel Pittet
+ * \version: version 1.0 du 27.02.2020
+ */
+
+/**
  * Constantes
  */
 #define NOMBRE_COLONNES 10

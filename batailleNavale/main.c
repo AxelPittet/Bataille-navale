@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-#include <math.h>
 
 /**
  * Permet d'afficher les caractères spéciaux

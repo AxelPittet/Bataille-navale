@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include <string.h>
 
 /**
  * Permet d'afficher les caractères spéciaux
@@ -52,7 +53,7 @@
 /**
  * Initioalisations
  */
-char carte[NOMBRE_COLONNES][NOMBRE_LIGNES], cibleLigne, b;
+char carte[NOMBRE_COLONNES][NOMBRE_LIGNES], cibleLigne, b, choixLogin[];
 int choixMenu, cibleColonne, bateau5, bateau4, bateau3A, bateau3B, bateau2, win;
 
 /**
@@ -241,9 +242,9 @@ void changerValeurCarte() {
              */
             bateau5 = 1;
 
-        /**
-        * Conditions à respecter pour que le bateau de 4 cases soit coulé
-        */
+            /**
+            * Conditions à respecter pour que le bateau de 4 cases soit coulé
+            */
         } else if ((carte[COLONNE1_BATEAU4][LIGNE_BATEAU4] == 'X') && (carte[COLONNE2_BATEAU4][LIGNE_BATEAU4] == 'X')
                    && (carte[COLONNE3_BATEAU4][LIGNE_BATEAU4] == 'X') &&
                    (carte[COLONNE4_BATEAU4][LIGNE_BATEAU4] == 'X')) {
@@ -259,9 +260,9 @@ void changerValeurCarte() {
             */
             bateau4 = 1;
 
-        /**
-        * Conditions à respecter pour que le premier bateau de 3 cases soit coulé
-        */
+            /**
+            * Conditions à respecter pour que le premier bateau de 3 cases soit coulé
+            */
         } else if ((carte[COLONNE1_BATEAU3A][LIGNE_BATEAU3A] == 'X') &&
                    (carte[COLONNE2_BATEAU3A][LIGNE_BATEAU3A] == 'X')
                    && (carte[COLONNE3_BATEAU3A][LIGNE_BATEAU3A] == 'X')) {
@@ -277,9 +278,9 @@ void changerValeurCarte() {
             */
             bateau3A = 1;
 
-        /**
-        * Conditions à respecter pour que le deuxième bateau de 3 cases soit coulé
-        */
+            /**
+            * Conditions à respecter pour que le deuxième bateau de 3 cases soit coulé
+            */
         } else if ((carte[COLONNE1_BATEAU3B][LIGNE_BATEAU3B] == 'X') &&
                    (carte[COLONNE2_BATEAU3B][LIGNE_BATEAU3B] == 'X') &&
                    (carte[COLONNE3_BATEAU3B][LIGNE_BATEAU3B] == 'X')) {
@@ -295,9 +296,9 @@ void changerValeurCarte() {
             */
             bateau3B = 1;
 
-        /**
-        * Conditions à respecter pour que le bateau de 2 cases soit coulé
-        */
+            /**
+            * Conditions à respecter pour que le bateau de 2 cases soit coulé
+            */
         } else if ((carte[COLONNE_BATEAU2][LIGNE1_BATEAU2] == 'X') && (carte[COLONNE_BATEAU2][LIGNE2_BATEAU2] == 'X')) {
 
             for (int i = 3; i < 5; i++) {
@@ -328,8 +329,8 @@ void changerValeurCarte() {
  */
 void verfierTir() {
     if ((cibleColonne < 0) || (cibleColonne > 9) || (cibleLigne < 0) || (cibleLigne > 9)) {
-            printf("   Tir non valide\n\n");
-        } else {
+        printf("   Tir non valide\n\n");
+    } else {
         changerValeurCarte();
     }
 }
@@ -343,6 +344,33 @@ void conditionsVictoire() {
          * Permet de savoir si les conditions sont remplies
          */
         win = 1;
+    }
+}
+
+/**
+ * Fonction servant à s'identifier si l'utilisateur le désire
+ */
+void Login() {
+    do {
+        clear();
+
+        printf("Voulez-vous vous identifier?(oui/non)\n");
+        printf("Choix : ");
+        scanf("%s", &choixLogin);
+
+    } while ((strcmp(choixLogin, "oui") != 0) && (strcmp(choixLogin, "non") != 0));
+
+    if (strcmp(choixLogin, "oui") == 0) {
+
+
+        do {
+            clear();
+
+            printf("Possedez-vous déjà un compte?(oui/non)\n");
+            printf(": ");
+            scanf("%s", &choixLogin);
+
+        } while ((strcmp(choixLogin, "oui") != 0) && (strcmp(choixLogin, "non") != 0));
     }
 }
 
@@ -375,23 +403,25 @@ void jouer() {
      * Affichage du message de victoire
      */
     printf(".______   .______           ___      ____    ____   ______      .___________. __    __          ___"
-       "           _______      ___        _______ .__   __.  _______     __   __   __  \n"
-    "|   _  \\  |   _  \\         /   \\     \\   \\  /   /  /  __  \\     |           ||  |  |  |        /   \\"
-    "         /  _____|    /   \\      /  _____||  \\ |  | |   ____|   |  | |  | |  | \n"
-    "|  |_)  | |  |_)  |       /  ^  \\     \\   \\/   /  |  |  |  |    `---|  |----`|  |  |  |       /  ^  \\"
-    "       |  |  __     /  ^  \\    |  |  __  |   \\|  | |  |__      |  | |  | |  | \n"
-    "|   _  <  |      /       /  /_\\  \\     \\      /   |  |  |  |        |  |     |  |  |  |      /  /_\\"
-    "  \\      |  | |_ |   /  /_\\  \\   |  | |_ | |  . `  | |   __|     |  | |  | |  | \n"
-    "|  |_)  | |  |\\  \\----. /  _____  \\     \\    /    |  `--'  |        |  |     |  `--'  |     /  _____"
-    "  \\     |  |__| |  /  _____  \\  |  |__| | |  |\\   | |  |____    |__| |__| |__| \n"
-    "|______/  | _| `._____|/__/     \\__\\     \\__/      \\______/         |__|      \\______/     /__/"
-    "     \\__\\     \\______| /__/     \\__\\  \\______| |__| \\__| |_______|   (__) (__) (__) \n\n\n\n\n\n\n");
+           "           _______      ___        _______ .__   __.  _______     __   __   __  \n"
+           "|   _  \\  |   _  \\         /   \\     \\   \\  /   /  /  __  \\     |           ||  |  |  |        /   \\"
+           "         /  _____|    /   \\      /  _____||  \\ |  | |   ____|   |  | |  | |  | \n"
+           "|  |_)  | |  |_)  |       /  ^  \\     \\   \\/   /  |  |  |  |    `---|  |----`|  |  |  |       /  ^  \\"
+           "       |  |  __     /  ^  \\    |  |  __  |   \\|  | |  |__      |  | |  | |  | \n"
+           "|   _  <  |      /       /  /_\\  \\     \\      /   |  |  |  |        |  |     |  |  |  |      /  /_\\"
+           "  \\      |  | |_ |   /  /_\\  \\   |  | |_ | |  . `  | |   __|     |  | |  | |  | \n"
+           "|  |_)  | |  |\\  \\----. /  _____  \\     \\    /    |  `--'  |        |  |     |  `--'  |     /  _____"
+           "  \\     |  |__| |  /  _____  \\  |  |__| | |  |\\   | |  |____    |__| |__| |__| \n"
+           "|______/  | _| `._____|/__/     \\__\\     \\__/      \\______/         |__|      \\______/     /__/"
+           "     \\__\\     \\______| /__/     \\__\\  \\______| |__| \\__| |_______|   (__) (__) (__) \n\n\n\n\n\n\n");
 
     pause();
+
+    Login();
 }
 
 int main() {
-
+    Login();
     /**
      * permet d'afficher les caractères spéciaux
      */

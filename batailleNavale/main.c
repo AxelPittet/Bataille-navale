@@ -53,7 +53,7 @@
 /**
  * Initioalisations
  */
-char carte[NOMBRE_COLONNES][NOMBRE_LIGNES], cibleLigne, b, choixLogin[];
+char carte[NOMBRE_COLONNES][NOMBRE_LIGNES], cibleLigne, b, choixLogin[], pseudo[9] = {0}, verifierPseudo[9] = {0};
 int choixMenu, cibleColonne, bateau5, bateau4, bateau3A, bateau3B, bateau2, win;
 
 /**
@@ -354,23 +354,50 @@ void Login() {
     do {
         clear();
 
-        printf("Voulez-vous vous identifier?(oui/non)\n");
-        printf("Choix : ");
+        printf("Voulez-vous vous identifier (oui/non): ");
         scanf("%s", &choixLogin);
 
     } while ((strcmp(choixLogin, "oui") != 0) && (strcmp(choixLogin, "non") != 0));
 
     if (strcmp(choixLogin, "oui") == 0) {
-
-
         do {
             clear();
 
-            printf("Possedez-vous déjà un compte?(oui/non)\n");
-            printf(": ");
+            printf("Possedez-vous déjà un compte (oui/non): ");
             scanf("%s", &choixLogin);
 
         } while ((strcmp(choixLogin, "oui") != 0) && (strcmp(choixLogin, "non") != 0));
+
+        if (strcmp(choixLogin, "oui") == 0) {
+
+            clear();
+
+            printf("Quel est votre nom d'utilsateur: ");
+            scanf("%s", &pseudo);
+
+            FILE *pseudos = NULL;
+
+            pseudos = fopen("pseudos.txt", "r");
+
+            if (pseudos != NULL) {
+
+                for (int i = 0; ((i<35) && (strcmp(pseudo, verifierPseudo) != 0)); i = i + 9) {
+
+                    fseek(pseudos, +i, SEEK_CUR);
+                    fgets(verifierPseudo, 11, pseudos);
+
+                    if (strcmp(pseudo, verifierPseudo) != 0) {
+                        printf("Ce nom d'utilisateur n'est pas valide");
+                    }
+                    pause();
+                }
+
+
+            } else {
+                printf("Impossible de vérifier votre pseudo, veuillez réessayer");
+                pause();
+            }
+        }
     }
 }
 

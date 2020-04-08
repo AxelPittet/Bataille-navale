@@ -53,8 +53,9 @@
 /**
  * Initioalisations
  */
-char carte[NOMBRE_COLONNES][NOMBRE_LIGNES], cibleLigne, b, choixLogin[], pseudo[9] = {0}, verifierPseudo[9] = {0};
-int choixMenu, cibleColonne, bateau5, bateau4, bateau3A, bateau3B, bateau2, win;
+char carte[NOMBRE_COLONNES][NOMBRE_LIGNES], cibleLigne, b, choixLogin[3] = {0}, pseudo[10] = {0}, verifierPseudo[10] = {
+        0}, pseudo2[10] = {0}, anciensPseudos[] = {0};
+int choixMenu, cibleColonne, bateau5, bateau4, bateau3A, bateau3B, bateau2, win, connection, nbEspaces, nbCarac = 0, caractereActuel = 0;
 
 /**
  * Fonction servant à réinitialiser la console
@@ -352,53 +353,165 @@ void conditionsVictoire() {
  */
 void Login() {
     do {
-        clear();
-
-        printf("Voulez-vous vous identifier (oui/non): ");
-        scanf("%s", &choixLogin);
-
-    } while ((strcmp(choixLogin, "oui") != 0) && (strcmp(choixLogin, "non") != 0));
-
-    if (strcmp(choixLogin, "oui") == 0) {
         do {
             clear();
 
-            printf("Possedez-vous déjà un compte (oui/non): ");
+            printf("Voulez-vous vous identifier (oui/non): ");
             scanf("%s", &choixLogin);
 
         } while ((strcmp(choixLogin, "oui") != 0) && (strcmp(choixLogin, "non") != 0));
 
         if (strcmp(choixLogin, "oui") == 0) {
+            do {
+                clear();
+
+                printf("Possedez-vous déjà un compte (oui/non): ");
+                scanf("%s", &choixLogin);
+
+            } while ((strcmp(choixLogin, "oui") != 0) && (strcmp(choixLogin, "non") != 0));
 
             clear();
 
-            printf("Quel est votre nom d'utilsateur: ");
-            scanf("%s", &pseudo);
+            if (strcmp(choixLogin, "oui") == 0) {
 
-            FILE *pseudos = NULL;
+                printf("Quel est votre nom d'utilsateur: ");
+                scanf("%s", &pseudo);
 
-            pseudos = fopen("pseudos.txt", "r");
+                FILE *verificationPseudo = NULL;
 
-            if (pseudos != NULL) {
+                verificationPseudo = fopen("verificationPseudo.txt", "w");
 
-                for (int i = 0; ((i<35) && (strcmp(pseudo, verifierPseudo) != 0)); i = i + 9) {
+                if (verificationPseudo != NULL) {
 
-                    fseek(pseudos, +i, SEEK_CUR);
-                    fgets(verifierPseudo, 11, pseudos);
-
-                    if (strcmp(pseudo, verifierPseudo) != 0) {
-                        printf("Ce nom d'utilisateur n'est pas valide");
+                    nbCarac = 0;
+                    for (int i = 0; pseudo[i] != 0; i++) {
+                        nbCarac++;
                     }
-                    pause();
+                    nbEspaces = 10 - nbCarac;
+
+                    fprintf(verificationPseudo, "%s", pseudo);
+
+                    for (int i = nbEspaces; i > 0; i--) {
+                        fprintf(verificationPseudo, " ");
+                    }
+                    fclose(verificationPseudo);
+                }
+                FILE *verificationPseudo2 = NULL;
+
+                verificationPseudo2 = fopen("verificationPseudo.txt", "r");
+
+                if (verificationPseudo2 != NULL) {
+                    fgets(pseudo, 11, verificationPseudo2);
+
+                    fclose(verificationPseudo2);
                 }
 
+                FILE *pseudos = NULL;
 
+                pseudos = fopen("pseudos.txt", "r");
+
+                if (pseudos != NULL) {
+
+                    while ((fgets(verifierPseudo, 11, pseudos) != 0) && (strcmp(verifierPseudo, pseudo) != 0)) {
+
+                    }
+                    if (strcmp(pseudo, verifierPseudo) != 0) {
+
+                        printf("Ce nom d'utilisateur n'est pas valide\n\n");
+                    } else {
+                        printf("Connexion réussie !\n\n");
+                        connection = 1;
+                    }
+                    pause();
+
+                    fclose(pseudos);
+                }
             } else {
-                printf("Impossible de vérifier votre pseudo, veuillez réessayer");
-                pause();
+                do {
+                    clear();
+                    printf("Création d'un compte(tapez 'annuler' pour reveir en arrière)\n\n");
+                    printf("Choississez un nom d'utilsateur : ");
+                    scanf("%s", &pseudo);
+
+                    if (strcmp(pseudo, "annuler") != 0) {
+
+                        FILE *adapterPseudo = NULL;
+
+                        adapterPseudo = fopen("verificationPseudo.txt", "w");
+
+                        if (adapterPseudo != NULL) {
+
+                            nbCarac = 0;
+                            for (int i = 0; pseudo[i] != 0; i++) {
+                                nbCarac++;
+                            }
+                            nbEspaces = 10 - nbCarac;
+
+                            fprintf(adapterPseudo, "%s", pseudo);
+
+                            for (int i = nbEspaces; i > 0; i--) {
+                                fprintf(adapterPseudo, " ");
+                            }
+                            fclose(adapterPseudo);
+                        }
+                        FILE *adapterPseudo2 = NULL;
+
+                        adapterPseudo2 = fopen("verificationPseudo.txt", "r");
+
+                        if (adapterPseudo2 != NULL) {
+
+                            fgets(pseudo, 11, adapterPseudo);
+                            fscanf(adapterPseudo, "%s", &pseudo);
+
+                            fclose(adapterPseudo2);
+                        }
+                        FILE *verificationPseudoExisteDeja = NULL;
+
+                        verificationPseudoExisteDeja = fopen("pseudos.txt", "r");
+
+                        if (verificationPseudoExisteDeja != NULL) {
+
+                            while ((fgets(verifierPseudo, 11, verificationPseudoExisteDeja) != NULL) &&
+                                   (strcmp(pseudo, verifierPseudo) != 0)) {
+
+                            }
+                            if (strcmp(pseudo, verifierPseudo) == 0) {
+                                printf("Ce pseudo est déjà utilisé\n\n");
+                            } else {
+                                FILE *nouveauPseudo = NULL;
+
+                                nouveauPseudo = fopen("pseudos.txt", "w");
+
+                                if (nouveauPseudo != 0) {
+                                    fseek(nouveauPseudo, 0, SEEK_END);
+
+                                    nbCarac = 0;
+                                    for (int i = 0; pseudo[i] != 0; i++) {
+                                        nbCarac++;
+                                    }
+                                    nbEspaces = 10 - nbCarac;
+
+                                    fprintf(nouveauPseudo, "%s", pseudo);
+
+                                    for (int i = nbEspaces; i > 0; i--) {
+                                        fprintf(nouveauPseudo, " ");
+                                    }
+                                    printf("Votre compte a été créé!\n\n");
+                                    connection = 1;
+
+                                    fclose(nouveauPseudo);
+                                }
+                            }
+                            pause();
+                            fclose(verificationPseudoExisteDeja);
+                        }
+                    }
+                } while ((strcmp(pseudo, "annuler") != 0) && (strcmp(pseudo, verifierPseudo) == 0));
             }
+        } else {
+            connection = 1;
         }
-    }
+    } while (connection != 1);
 }
 
 /**

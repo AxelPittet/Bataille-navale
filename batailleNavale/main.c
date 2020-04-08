@@ -54,8 +54,9 @@
  * Initioalisations
  */
 char carte[NOMBRE_COLONNES][NOMBRE_LIGNES], cibleLigne, b, choixLogin[3] = {0}, pseudo[10] = {0}, verifierPseudo[10] = {
-        0}, pseudo2[10] = {0}, anciensPseudos[] = {0};
-int choixMenu, cibleColonne, bateau5, bateau4, bateau3A, bateau3B, bateau2, win, connection, nbEspaces, nbCarac = 0, caractereActuel = 0;
+        0}, pseudo2[10] = {0}, anciensPseudos[] = {0}, afficherPseudoBest[10] = {0};
+int choixMenu, cibleColonne, bateau5, bateau4, bateau3A, bateau3B, bateau2, win, connection, nbEspaces, nbCarac = 0
+, score = 0, caractereActuel = 0, ancienScore, afficherScoreBest[10] = {0}, afficherScoreActuel[10] = {0};
 
 /**
  * Fonction servant à réinitialiser la console
@@ -224,6 +225,7 @@ void changerValeurCarte() {
         || ((cibleColonne == COLONNE_BATEAU2) && ((cibleLigne == LIGNE1_BATEAU2) || (cibleLigne == LIGNE2_BATEAU2)))) {
 
         carte[cibleColonne][cibleLigne] = 'X';
+        score += 7;
 
         /**
          * Conditions à respecter pour que le bateau de 5 cases soit coulé
@@ -329,10 +331,13 @@ void changerValeurCarte() {
  * Fonction servant à savoir si un tir est valide
  */
 void verfierTir() {
-    if ((cibleColonne < 0) || (cibleColonne > 9) || (cibleLigne < 0) || (cibleLigne > 9)) {
+    if ((cibleColonne < 0) || (cibleColonne > 9) || (cibleLigne < 0) || (cibleLigne > 9) ||
+        (carte[cibleColonne][cibleLigne] == '-') || (carte[cibleColonne][cibleLigne] == 'X') ||
+        (carte[cibleColonne][cibleLigne] == 'C')) {
         printf("   Tir non valide\n\n");
     } else {
         changerValeurCarte();
+        score -= 1;
     }
 }
 
@@ -408,23 +413,38 @@ void Login() {
 
                 FILE *pseudos = NULL;
 
-                pseudos = fopen("pseudos.txt", "r");
+                pseudos = fopen("scores.txt", "r");
 
                 if (pseudos != NULL) {
 
                     while ((fgets(verifierPseudo, 11, pseudos) != 0) && (strcmp(verifierPseudo, pseudo) != 0)) {
 
                     }
+                    fscanf(pseudos, "%d", &ancienScore);
                     if (strcmp(pseudo, verifierPseudo) != 0) {
-
                         printf("Ce nom d'utilisateur n'est pas valide\n\n");
                     } else {
-                        printf("Connexion réussie !\n\n");
                         connection = 1;
+                        printf("Connexion réussie !\n");
+
                     }
-                    pause();
 
                     fclose(pseudos);
+
+                    if (score > ancienScore) {
+                        FILE *nouveauScore = NULL;
+
+                        nouveauScore = fopen("scores.txt", "w");
+
+                        if (nouveauScore != 0) {
+                            fprintf(nouveauScore, "%d", score);
+                        }
+                        printf("Votre score a été mis à jour !\n");
+
+                        fclose(nouveauScore);
+                    }
+                    printf("\n");
+                    pause();
                 }
             } else {
                 do {
@@ -467,7 +487,7 @@ void Login() {
                         }
                         FILE *verificationPseudoExisteDeja = NULL;
 
-                        verificationPseudoExisteDeja = fopen("pseudos.txt", "r");
+                        verificationPseudoExisteDeja = fopen("scores.txt", "r");
 
                         if (verificationPseudoExisteDeja != NULL) {
 
@@ -480,7 +500,7 @@ void Login() {
                             } else {
                                 FILE *nouveauPseudo = NULL;
 
-                                nouveauPseudo = fopen("pseudos.txt", "w");
+                                nouveauPseudo = fopen("scores.txt", "a");
 
                                 if (nouveauPseudo != 0) {
                                     fseek(nouveauPseudo, 0, SEEK_END);
@@ -496,6 +516,8 @@ void Login() {
                                     for (int i = nbEspaces; i > 0; i--) {
                                         fprintf(nouveauPseudo, " ");
                                     }
+                                    fprintf(nouveauPseudo, "%d\n", score);
+
                                     printf("Votre compte a été créé!\n\n");
                                     connection = 1;
 
@@ -560,8 +582,55 @@ void jouer() {
     Login();
 }
 
+void scores() {
+    clear();
+
+    FILE *afficherScores = NULL;
+
+    afficherScores = fopen("scores.txt", "r");
+
+    if (afficherScores != 0) {
+        for (int a = 0; a < 10; a++) {
+            for (int i = 10; i < 1000; i = i + 10) {
+                fseek(afficherScores, +i, SEEK_SET);
+
+                fscanf(afficherScores, "%d", &afficherScoreActuel[a]);
+
+                if ((afficherScoreActuel[a] > afficherScoreBest[a]) &&
+                    (afficherScoreActuel[a] != afficherScoreBest[0]) &&
+                    (afficherScoreActuel[a] > afficherScoreBest[a]) &&
+                    (afficherScoreActuel[a] != afficherScoreBest[1]) &&
+                    (afficherScoreActuel[a] > afficherScoreBest[a]) &&
+                    (afficherScoreActuel[a] != afficherScoreBest[2]) &&
+                    (afficherScoreActuel[a] > afficherScoreBest[a]) &&
+                    (afficherScoreActuel[a] != afficherScoreBest[3]) &&
+                    (afficherScoreActuel[a] > afficherScoreBest[a]) &&
+                    (afficherScoreActuel[a] != afficherScoreBest[4]) &&
+                    (afficherScoreActuel[a] > afficherScoreBest[a]) &&
+                    (afficherScoreActuel[a] != afficherScoreBest[5]) &&
+                    (afficherScoreActuel[a] > afficherScoreBest[a]) &&
+                    (afficherScoreActuel[a] != afficherScoreBest[6]) &&
+                    (afficherScoreActuel[a] > afficherScoreBest[a]) &&
+                    (afficherScoreActuel[a] != afficherScoreBest[7]) &&
+                    (afficherScoreActuel[a] > afficherScoreBest[a]) &&
+                    (afficherScoreActuel[a] != afficherScoreBest[8]) &&
+                    (afficherScoreActuel[a] > afficherScoreBest[a]) &&
+                    (afficherScoreActuel[a] != afficherScoreBest[9])) {
+
+                    afficherScoreBest[a] = afficherScoreActuel[a];
+
+                    fseek(afficherScores, -14, SEEK_CUR);
+                    fgets(afficherPseudoBest[a], 11, afficherScores);
+                }
+            }
+            printf("%d - %s : %d\n", a + 1, afficherPseudoBest[a], afficherScoreBest[a]);
+        }
+        fclose(afficherScores);
+    }
+    pause();
+}
+
 int main() {
-    Login();
     /**
      * permet d'afficher les caractères spéciaux
      */
@@ -592,7 +661,7 @@ int main() {
 
                 break;
             case 3:
-
+                scores();
                 break;
             case 4:
                 quitter();
